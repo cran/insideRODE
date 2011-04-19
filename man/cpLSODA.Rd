@@ -1,5 +1,5 @@
-\name{cfLSODA}
-\alias{cfLSODA}
+\name{cpLSODA}
+\alias{cpLSODA}
 \title{
       LSODA Solver for NLME using compiled code(c or fortran)
 }
@@ -10,7 +10,7 @@
 
 }
 \usage{
-    cfLSODA(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol = 1e-4, tcrit = NULL, dllname = NULL, hmin = 0, hmax = Inf)
+    cpLSODA(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol = 1e-4, tcrit = NULL, dllname = NULL, hmin = 0, hmax = Inf)
 }
 \arguments{
   \item{model }{either an \R-function that computes the values of the
@@ -60,7 +60,7 @@
 \examples{
 #######################################################
 #use c code
-#cfLSODA SOLVER
+#cpLSODA SOLVER
 #######################################################
 rm(list=ls())
 require(insideRODE)
@@ -82,6 +82,79 @@ OneComp <- list(DiffEq=list(
                 Init=list(0,0))
 
 TheophModel <- nlmLSODA(OneComp,TheophODE) #ode solver
+
+#######################################################
+#example 
+#sink functions
+#cpLSODE
+#######################################################
+#sink("mymod.c")
+cat("
+/* file mymod.c */
+#include <R.h>
+#include <math.h>
+static double parms[3];
+#define ka parms[0]
+#define ke parms[1]
+#define CL parms[2]
+
+/* initializer */
+void initmod(void (* odeparms)(int *, double *))
+{
+   int N=2;
+   odeparms(&N, parms);
+}
+
+/* names for states and derivatives */
+#define y1 y[0]
+#define y2 y[1]
+#define dy1 ydot[0]
+#define dy2 ydot[1]
+#define c1 yout[0]
+#define c2 yout[1]
+
+/* Derivatives and 1 output variable */
+void derivs (int *neq, double *t, double *y, double *ydot, double *yout, int *ip)
+{
+    dy1 = -exp(ka)*y1;
+    dy2 = exp(ka)*y1-exp(ke)*y2;
+    c1 = 0.0;
+    c2 = y2/exp(CL)*exp(ke);
+}
+
+/* END file mymod1.c */
+",fill=TRUE)
+#sink()
+#system("RCMD SHLIB mymod.c")
+#dllname<-dyn.load("mymod.dll")[[1]]
+
+
+#TheophModelc <- cpLSODA(OneComp,TheophODE,dllname=dllname)
+
+#cpLSODA,cfLSODE, cpLSODA, cfVODE SOLVER
+#sink("mymodff.f")
+cat("
+c file mymodf.f
+        subroutine initmod(odeparms)
+        external odeparms
+        double precision parms(3)
+        common /myparms/parms
+        call odeparms(2, parms)
+        return
+        end
+        subroutine derivs (neq, t, y, ydot, yout, ip)
+        double precision t, y, ydot, ka, ke, CL
+        integer neq, ip(*)
+        dimension y(2), ydot(2), yout(2)
+        common /myparms/ka,ke,CL
+        ydot(1) = -exp(ka)*y(1)
+        ydot(2) = exp(ka)*y(1)-exp(ke)*y(2)
+        yout(1) = 0
+        yout(2) = y(2)/exp(CL)*exp(ke)
+        return
+        end
+",fill=TRUE)
+#sink(file = NULL, append = FALSE, type = c("output"),split = FALSE)
 
 }
 \seealso{

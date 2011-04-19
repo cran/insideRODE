@@ -1,5 +1,5 @@
-\name{cfODE}
-\alias{cfODE}
+\name{cpODE}
+\alias{cpODE}
 
 \title{
 General Solver for Ordinary Differential Equations
@@ -14,7 +14,7 @@ General Solver for Ordinary Differential Equations
 around the implemented ODE solvers}
 
 \usage{
-cfODE(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol = 1e-4, tcrit = NULL, dllname = NULL, hmin = 0, hmax = Inf)
+cpODE(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol = 1e-4, tcrit = NULL, dllname = NULL, hmin = 0, hmax = Inf)
 }
 \arguments{
   \item{model }{either an \R-function that computes the values of the
@@ -62,8 +62,9 @@ cfODE(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol =
 \examples{
 #######################################################
 #use c code
-#see example cfLSODA
+#see cpLSODA
 #######################################################
+
 }
 \seealso{
 }

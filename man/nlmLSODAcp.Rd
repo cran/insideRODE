@@ -1,20 +1,16 @@
-\name{cfODE}
-\alias{cfODE}
-
+\name{nlmLSODAcp}
+\alias{nlmLSODAcp}
 \title{
-General Solver for Ordinary Differential Equations
-       and compiled functions to be used in NLME, this version
-       just use default function. The future version will provide buildin
-       methods such as "lsoda", "lsode", "lsodes", "lsodar", "vode", "daspk",
-           "euler", "rk4", "ode23", "ode45", "radau",
-           "bdf", "bdf_d", "adams", "impAdams", "impAdams_d".
+      LSODA Solver for NLME
 }
+\description{
+  Use Solver for Ordinary Differential Equations (ODE),
+  Switching Automatically Between Stiff and Non-stiff Methods
+  and Generate functions to be used in NLME
 
-\description{ Generate functions for NLME Solves using a system of ordinary differential equations; a wrapper
-around the implemented ODE solvers}
-
+}
 \usage{
-cfODE(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol = 1e-4, tcrit = NULL, dllname = NULL, hmin = 0, hmax = Inf)
+nlmLSODAcp(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol = 1e-4, tcrit = NULL, hmin = 0, hmax = Inf)
 }
 \arguments{
   \item{model }{either an \R-function that computes the values of the
@@ -43,12 +39,6 @@ cfODE(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol =
     integration should not proceed (perhaps because of a singularity),
     that should be provided in \code{tcrit}.
   }
-  \item{dllname }{a string giving the name of the shared library
-    (without extension) that contains all the compiled function or
-    subroutine definitions refered to in \code{func} and
-    \code{jacfunc}. See package \code{"deSolve"}.
-  }
-
   \item{hmin }{an optional minimum value of the integration stepsize. In
     special situations this parameter may speed up computations with the
     cost of precision. Don't use \code{hmin} if you don't know why!
@@ -60,13 +50,14 @@ cfODE(model, data, LogParms = TRUE, JAC = FALSE, SEQ = FALSE,rtol = 1e-4, atol =
   }
 }
 \examples{
-#######################################################
-#use c code
-#see example cfLSODA
-#######################################################
+####################################################################
+#general model from nlmeODE package
+#nlmLSODAcp USE ACCORDING FUNCTIONS
+####################################################################
 }
 \seealso{
 }
 \note{
 }
 \keyword{math}
+

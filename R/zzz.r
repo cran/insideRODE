@@ -3,5 +3,6 @@
   require(nlme)
   require(lattice)
   require(deSolve)
+  require(compiler)
 }
 
